@@ -91,36 +91,42 @@ function App() {
   };
 
   // Handle add expense
-  const handleAddExpense = async () => {
-    if (!title || !amount || !category) {
-      setError("All fields are required to add an expense");
-      return;
-    }
-    setError("");
+  // Handle add expense
+const handleAddExpense = async () => {
+  if (!title || !amount || !category) {
+    setError("All fields are required to add an expense");
+    return;
+  }
+  setError("");
 
-    try {
-      const res = await fetch(`${API_URL}/expenses`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, amount: Number(amount), category }),
-      });
+  try {
+    const res = await fetch(`${API_URL}/expenses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        title, 
+        amount: Number(amount), 
+        category,
+        date: new Date().toISOString() // <-- add date here
+      }),
+    });
 
-      if (res.ok) {
-        setTitle("");
-        setAmount("");
-        setCategory("");
-        fetchExpenses(token);
-      } else {
-        setError("Failed to add expense");
-      }
-    } catch (err) {
-      console.error("Error adding expense:", err);
-      setError("Add expense request failed");
+    if (res.ok) {
+      setTitle("");
+      setAmount("");
+      setCategory("");
+      fetchExpenses(token);
+    } else {
+      setError("Failed to add expense");
     }
-  };
+  } catch (err) {
+    console.error("Error adding expense:", err);
+    setError("Add expense request failed");
+  }
+};
 
   // Handle delete expense
   const handleDeleteExpense = async (id) => {
@@ -213,29 +219,43 @@ function App() {
             onChange={(e) => setAmount(e.target.value)}
           />
           <br />
-          <input
-            type="text"
-            placeholder="Category"
+          <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-          />
+            required
+          >
+            <option value="">-- Select Category --</option>
+            <option value="Food">Food</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Laundry">Laundry</option>
+            <option value="Travel">Travel</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Other">Other</option>
+          </select>
+
           <br />
           <button onClick={handleAddExpense}>Add Expense</button>
 
           <h2>Expenses</h2>
           <ul>
-            {expenses.map((exp) => (
-              <li key={exp._id}>
-                {exp.title} - ₹{exp.amount} ({exp.category}){" "}
-                <button
-                  onClick={() => handleDeleteExpense(exp._id)}
-                  style={{ marginLeft: "10px", color: "red" }}
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
+  {expenses.map((exp) => (
+    <li key={exp._id}>
+      {exp.title} - ₹{exp.amount} ({exp.category}) <br/>
+      <small>
+        {new Date(exp.date).toLocaleString()} {/* formatted date */}
+      </small>
+      <button
+        onClick={() => handleDeleteExpense(exp._id)}
+        style={{ marginLeft: "10px", color: "red" }}
+      >
+        Delete
+      </button>
+    </li>
+  ))}
+</ul>
+
         </div>
       )}
     </div>

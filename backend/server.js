@@ -69,9 +69,11 @@ app.post("/auth/login", async (req, res) => {
 app.post("/expenses", auth, async (req, res) => {
   try {
     const { title, amount, category, date } = req.body;
+
     if (!title || !category || amount === undefined || amount === null) {
       return res.status(400).json({ error: "title, amount, and category are required" });
     }
+
     const amt = Number(amount);
     if (Number.isNaN(amt) || amt <= 0) {
       return res.status(400).json({ error: "amount must be a positive number" });
@@ -82,7 +84,7 @@ app.post("/expenses", auth, async (req, res) => {
       title: String(title).trim(),
       amount: amt,
       category: String(category).trim(),
-      date: date ? new Date(date) : undefined,
+      date: date ? new Date(date) : new Date(), // ✅ use frontend date or now
     });
 
     await expense.save();
