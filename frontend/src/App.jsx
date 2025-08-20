@@ -261,19 +261,36 @@ function App() {
 
           <h2>Expenses</h2>
           <ul>
-            {expenses.map((exp) => (
-              <li key={exp._id}>
-                {exp.title} - ₹{exp.amount} ({exp.category}) <br />
-                <small>{new Date(exp.date).toLocaleString()}</small>
-                <button
-                  onClick={() => handleDeleteExpense(exp._id)}
-                  style={{ marginLeft: "10px", color: "red" }}
+            {expenses
+              .slice() // create a copy to avoid mutating state
+              .sort((a, b) => new Date(b.date) - new Date(a.date)) // newest first
+              .map((exp) => (
+                <li
+                  key={exp._id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0.8rem 1rem",
+                    borderRadius: "12px",
+                    marginBottom: "0.5rem",
+                    backgroundColor: "rgba(255,255,255,0.15)"
+                  }}
                 >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
+                  <div>
+                    {exp.title} - ₹{exp.amount} ({exp.category}) <br />
+                    <small>{new Date(exp.date).toLocaleString()}</small>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteExpense(exp._id)}
+                    style={{ color: "red" }}
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+
         </div>
       )}
     </div>
