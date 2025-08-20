@@ -8,8 +8,9 @@ function App() {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+  const [customCategory, setCustomCategory] = useState(""); // for "Other"
   const [error, setError] = useState("");
-  const [isRegistering, setIsRegistering] = useState(false); // toggle login/register
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const API_URL = "http://localhost:5000";
 
@@ -72,7 +73,7 @@ function App() {
       const data = await res.json();
 
       if (data.success) {
-        setIsRegistering(false); // after register, go back to login
+        setIsRegistering(false);
         setError("Registration successful! Please login.");
       } else {
         setError(data.message || "Registration failed");
@@ -91,42 +92,43 @@ function App() {
   };
 
   // Handle add expense
-  // Handle add expense
-const handleAddExpense = async () => {
-  if (!title || !amount || !category) {
-    setError("All fields are required to add an expense");
-    return;
-  }
-  setError("");
-
-  try {
-    const res = await fetch(`${API_URL}/expenses`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ 
-        title, 
-        amount: Number(amount), 
-        category,
-        date: new Date().toISOString() // <-- add date here
-      }),
-    });
-
-    if (res.ok) {
-      setTitle("");
-      setAmount("");
-      setCategory("");
-      fetchExpenses(token);
-    } else {
-      setError("Failed to add expense");
+  const handleAddExpense = async () => {
+    const finalCategory = category === "Other" ? customCategory : category;
+    if (!title || !amount || !finalCategory) {
+      setError("All fields are required to add an expense");
+      return;
     }
-  } catch (err) {
-    console.error("Error adding expense:", err);
-    setError("Add expense request failed");
-  }
-};
+    setError("");
+
+    try {
+      const res = await fetch(`${API_URL}/expenses`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          amount: Number(amount),
+          category: finalCategory,
+          date: new Date().toISOString(),
+        }),
+      });
+
+      if (res.ok) {
+        setTitle("");
+        setAmount("");
+        setCategory("");
+        setCustomCategory("");
+        fetchExpenses(token);
+      } else {
+        setError("Failed to add expense");
+      }
+    } catch (err) {
+      console.error("Error adding expense:", err);
+      setError("Add expense request failed");
+    }
+  };
 
   // Handle delete expense
   const handleDeleteExpense = async (id) => {
@@ -156,6 +158,14 @@ const handleAddExpense = async () => {
     }
   }, []);
 
+  // Handle Enter key
+  const handleKeyPress = (e, action) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Expense Tracker</h1>
@@ -170,6 +180,7 @@ const handleAddExpense = async () => {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e, isRegistering ? handleRegister : handleLogin)}
             style={{ display: "block", margin: "10px auto", padding: "8px", width: "90%" }}
           />
           <input
@@ -177,6 +188,7 @@ const handleAddExpense = async () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e, isRegistering ? handleRegister : handleLogin)}
             style={{ display: "block", margin: "10px auto", padding: "8px", width: "90%" }}
           />
 
@@ -205,57 +217,63 @@ const handleAddExpense = async () => {
 
           <h2>Add Expense</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <br />
-          <input
-            type="number"
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <br />
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">-- Select Category --</option>
-            <option value="Food">Food</option>
-            <option value="Snacks">Snacks</option>
-            <option value="Laundry">Laundry</option>
-            <option value="Travel">Travel</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Bills">Bills</option>
-            <option value="Other">Other</option>
-          </select>
-
-          <br />
-          <button onClick={handleAddExpense}>Add Expense</button>
+          <form onSubmit={(e) => { e.preventDefault(); handleAddExpense(); }}>
+            <input
+              type="text"
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{ marginBottom: "10px", display: "block" }}
+            />
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              style={{ marginBottom: "10px", display: "block" }}
+            />
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{ marginBottom: "10px", display: "block" }}
+            >
+              <option value="">-- Select Category --</option>
+              <option value="Food">Food</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Laundry">Laundry</option>
+              <option value="Travel">Travel</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Bills">Bills</option>
+              <option value="Other">Other</option>
+            </select>
+            {category === "Other" && (
+              <input
+                type="text"
+                placeholder="Enter custom category"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                style={{ marginBottom: "10px", display: "block" }}
+              />
+            )}
+            <button type="submit">Add Expense</button>
+          </form>
 
           <h2>Expenses</h2>
           <ul>
-  {expenses.map((exp) => (
-    <li key={exp._id}>
-      {exp.title} - ₹{exp.amount} ({exp.category}) <br/>
-      <small>
-        {new Date(exp.date).toLocaleString()} {/* formatted date */}
-      </small>
-      <button
-        onClick={() => handleDeleteExpense(exp._id)}
-        style={{ marginLeft: "10px", color: "red" }}
-      >
-        Delete
-      </button>
-    </li>
-  ))}
-</ul>
-
+            {expenses.map((exp) => (
+              <li key={exp._id}>
+                {exp.title} - ₹{exp.amount} ({exp.category}) <br />
+                <small>{new Date(exp.date).toLocaleString()}</small>
+                <button
+                  onClick={() => handleDeleteExpense(exp._id)}
+                  style={{ marginLeft: "10px", color: "red" }}
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

@@ -1,55 +1,145 @@
+/* Root styling and global variables */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  color-scheme: light dark;
+
+  --primary-color: #646cff;
+  --primary-hover: #535bf2;
+  --bg-dark: #242424;
+  --bg-light: #ffffff;
+  --text-dark: #ffffff;
+  --text-light: #213547;
+  --card-bg-dark: #1a1a1a;
+  --card-bg-light: #f9f9f9;
+  --border-radius: 12px;
+  --transition: 0.3s ease;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+  font-family: inherit;
+  transition: background-color var(--transition), color var(--transition);
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
 
+/* Card-style container for content */
 div {
   text-align: center;
 }
 
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 .card {
-  padding: 2em;
+  background-color: var(--card-bg-dark);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2rem;
+  transition: background-color var(--transition), box-shadow var(--transition);
 }
 
-.read-the-docs {
-  color: #888;
+/* Heading */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Buttons */
+button {
+  border-radius: var(--border-radius);
+  border: 1px solid transparent;
+  padding: 0.8em 1.5em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--card-bg-dark);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin: 0.5rem 0;
+}
+button:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(100, 108, 255, 0.1);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--primary-color);
+}
+
+/* Inputs and Selects */
+input, select {
+  width: 90%;
+  padding: 0.7em;
+  margin: 0.5rem 0;
+  border-radius: var(--border-radius);
+  border: 1px solid #ccc;
+  font-size: 1em;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(100,108,255,0.5);
+}
+
+/* Links */
+a {
+  font-weight: 500;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* Expense list styling */
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  background-color: rgba(255,255,255,0.05);
+  margin: 0.5rem 0;
+  padding: 0.8rem 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color var(--transition);
+}
+li:hover {
+  background-color: rgba(100,108,255,0.1);
+}
+
+/* Custom dark/light mode */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: var(--bg-light);
+    color: var(--text-light);
+  }
+  .card {
+    background-color: var(--card-bg-light);
+  }
+  button {
+    background-color: var(--card-bg-light);
+    color: var(--text-light);
+  }
+  li {
+    background-color: rgba(0,0,0,0.05);
+  }
 }
