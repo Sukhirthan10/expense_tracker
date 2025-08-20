@@ -23,8 +23,7 @@ body {
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  background-color: var(--bg-dark);
-  color: var(--text-dark);
+  background: linear-gradient(135deg, #00b09b, #96c93d);  color: var(--text-dark);
   font-family: inherit;
   transition: background-color var(--transition), color var(--transition);
 }
@@ -65,16 +64,19 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--card-bg-dark);
-  color: var(--text-dark);
   cursor: pointer;
   transition: all var(--transition);
   margin: 0.5rem 0;
+
+  /* Change background and text color */
+  background-color: #ffffffcc; /* semi-transparent white */
+  color: #242424; /* dark text */
 }
 button:hover {
   border-color: var(--primary-color);
-  background-color: rgba(100, 108, 255, 0.1);
+  background-color: #ffffff; /* solid white on hover */
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto var(--primary-color);
@@ -89,12 +91,18 @@ input, select {
   border: 1px solid #ccc;
   font-size: 1em;
   transition: border-color var(--transition), box-shadow var(--transition);
+  
+  /* Change background and text color */
+  background-color: rgba(255, 255, 255, 0.9); /* semi-transparent white */
+  color: #242424; /* dark text for contrast */
 }
+
 input:focus, select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 5px rgba(100,108,255,0.5);
 }
+
 
 /* Links */
 a {
