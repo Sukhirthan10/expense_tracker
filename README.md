@@ -122,6 +122,14 @@ sudo systemctl enable mongod
 
 ---
 
+### Screenshots
+
+<img width="1916" height="993" alt="image" src="https://github.com/user-attachments/assets/d73c77fb-60d1-4b94-b692-c810d2f7b62e" />
+<img width="1899" height="996" alt="Screenshot 2025-08-21 142846" src="https://github.com/user-attachments/assets/3b1d21d7-00df-4388-9b1e-e88569d703eb" />
+<img width="1899" height="991" alt="image" src="https://github.com/user-attachments/assets/a69e73c4-efee-4f2e-9b48-de525793e4fa" />
+
+---
+
 ### Technologies Used
 
 | Layer    | Tech Stack                          |
