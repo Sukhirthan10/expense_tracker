@@ -113,6 +113,61 @@ app.delete("/expenses/:id", auth, async (req, res) => {
     res.status(500).json({ error: "Failed to delete expense" });
   }
 });
+// GET /expenses/monthly-total
+app.get("/expenses/monthly-total", auth, async (req, res) => {
+  try {
+    const result = await Expense.aggregate([
+      { $match: { userId: req.user.id } },
+      {
+        $group: {
+          _id: { year: { $year: "$date" }, month: { $month: "$date" } },
+          total: { $sum: "$amount" }
+        }
+      },
+      { $sort: { "_id.year": -1, "_id.month": -1 } }
+    ]);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch monthly totals" });
+  }
+});
+
+// GET /expenses/by-month
+app.get("/expenses/by-month", auth, async (req, res) => {
+  try {
+    const result = await Expense.aggregate([
+      { $match: { userId: req.user.id } },
+      {
+        $group: {
+          _id: { year: { $year: "$date" }, month: { $month: "$date" } },
+          expenses: { $push: "$$ROOT" }
+        }
+      },
+      { $sort: { "_id.year": -1, "_id.month": -1 } }
+    ]);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch expenses by month" });
+  }
+});
+
+// GET /expenses/category-total
+app.get("/expenses/category-total", auth, async (req, res) => {
+  try {
+    const result = await Expense.aggregate([
+      { $match: { userId: req.user.id } },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$amount" }
+        }
+      }
+    ]);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch category totals" });
+  }
+});
 
 // Start server
 app.listen(5000, () => console.log("Server running on http://localhost:5000"));
