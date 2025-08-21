@@ -29,25 +29,74 @@ README.md          # This file!
 
 ### Getting Started
 
-#### Prerequisites
+## Installation
 
-* Node.js and npm
-* MongoDB running locally or via Atlas
+### 1. Clone the repo
 
-#### Setup Backend
+```bash
+git clone https://github.com/Sukhirthan10/expense_tracker.git
+cd expense_tracker
+```
+
+---
+
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
-npm start            # Starts server at http://localhost:5000
 ```
 
-#### Setup Frontend
+#### Required Packages
+
+* express
+* mongoose
+* cors
+* bcryptjs
+* jsonwebtoken
+* dotenv
+
+Dev dependency:
+
+* nodemon
+
+#### Start backend
 
 ```bash
-cd frontend
+npx nodemon server.js
+```
+
+---
+
+### 3. Frontend Setup
+
+```bash
+cd ../frontend
 npm install
-npm run dev          # Starts React dev server (e.g., at http://localhost:3000)
+```
+
+#### Required Packages
+
+* axios
+* recharts
+
+#### Start frontend (Vite)
+
+```bash
+npm run dev
+```
+
+---
+
+### 4. MongoDB Setup
+
+If using **local MongoDB** on Ubuntu:
+
+```bash
+sudo apt update
+sudo apt install -y mongodb-org
+sudo systemctl start mongod
+sudo systemctl enable mongod
 ```
 
 ---
@@ -86,6 +135,7 @@ npm run dev          # Starts React dev server (e.g., at http://localhost:3000)
 
 ### Future Enhancements
 
+* Use third party api to get spend information directly from payment apps.
 * Add bar charts or other visualizations for monthly trends.
 * Improve styling using a CSS framework like Tailwind or Material UI.
 * Add category filters and search on the frontend.
